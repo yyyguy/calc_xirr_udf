@@ -1,0 +1,13 @@
+{
+    "java.project.referencedLibraries": [
+        "lib/**/*.jar",
+        "c:\\Users\\fblue\\Downloads\\libraries\\arrow-memory-0.3.0.jar",
+        "c:\\Users\\fblue\\Downloads\\libraries\\arrow-memory-core-5.0.0.jar",
+        "c:\\Users\\fblue\\Downloads\\libraries\\arrow-vector-0.3.0.jar",
+        "c:\\Users\\fblue\\Downloads\\libraries\\arrow-vector-4.0.0-20210722102535-bda216e83f-dremio.jar",
+        "c:\\Users\\fblue\\Downloads\\libraries\\dremio-sabot-kernel-18.1.0-202109222258120166-963adceb.jar",
+        "c:\\Users\\fblue\\Downloads\\libraries\\dremio-sabot-kernel-18.1.0-202109222258120166-963adceb-proto.jar",
+        "c:\\Users\\fblue\\Downloads\\libraries\\netty-buffer-4.1.69.Final.jar",
+        "c:\\Users\\fblue\\Downloads\\libraries\\netty-common-4.1.69.Final.jar"
+    ]
+}
