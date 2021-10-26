@@ -1,16 +1,13 @@
 package com.BCI.xirr;
 
-// Imports
-
+// Import dependencies
 import com.dremio.exec.expr.AggrFunction;
 import com.dremio.exec.expr.annotations.FunctionTemplate;
 import com.dremio.exec.expr.annotations.Output;
 import com.dremio.exec.expr.annotations.Param;
 import com.dremio.exec.expr.annotations.Workspace;
 import org.apache.arrow.vector.holders.*;
-
 import java.util.ArrayList;
-
 import static java.util.Collections.unmodifiableList;
 
 // Function Template configuration
@@ -36,7 +33,7 @@ public class CalcXIRR implements AggrFunction {
     NullableIntHolder init;
     BigIntHolder nonNullCount;
 
-    // setup() function
+    // The setup() function is used to initialize the workspace variables.
     public void setup() {
 
         System.out.println("STDOUT: Calling setup() in calc_xirr_udf ");
@@ -57,35 +54,40 @@ public class CalcXIRR implements AggrFunction {
         rate.value = 0;
     }
 
-    // add() function
+    // The add() function applies consistent logic against each record within the dataset.
     @Override
     public void add() {
 
+        System.out.println("STDOUT: Calling add() in CalcXIRR");
+
+        // Check to see if the record's amount is available
         if (amount.isSet != 0) {
             nonNullCount.value = 1;
+
+            // Add the record's amount and date to the transactions array
             boolean add = txs.add(new Transaction(amount.value, when.buffer.toString()));
 
-            System.out.println("STDOUT: Calling add() in CalcXIRR");
         }
     }
 
-    // output() function
+    // The output() function produces the return result which in this case is the internal rate of return.
     @Override
     public void output() {
 
         System.out.println("STDOUT: Calling output() in CalcXIRR");
 
+        // Call the XIRR calculation function with the loaded transactions array as the input argument
         rate.value = new XIRR(unmodifiableList(txs)).xirr();
         System.out.println(rate.value);
     }
 
-    // reset() function
+    // The reset() function applies the necessary reset values to the required variables.
     @Override
     public void reset() {
 
         System.out.println("STDOUT: Calling reset() in calc_xirr_udf ");
 
         nonNullCount.value = 0; // Reset the null check
-        rate.value = 0;         // Reset the rate.value
+        rate.value         = 0; // Reset the rate.value
     }
 }
