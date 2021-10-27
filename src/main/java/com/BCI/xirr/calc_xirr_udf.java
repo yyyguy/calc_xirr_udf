@@ -18,7 +18,7 @@ import static java.util.Collections.unmodifiableList;
 
 // CalcXIRR implements the AggregateFunction because
 // there are multiple records combined to perform the XIRR calculation
-public class CalcXIRR implements AggrFunction {
+public class calc_xirr_udf implements AggrFunction {
 
     @Param
     private NullableVarCharHolder when;
@@ -66,6 +66,12 @@ public class CalcXIRR implements AggrFunction {
 
             // Add the record's amount and date to the transactions array
             boolean add = txs.add(new Transaction(amount.value, when.buffer.toString()));
+            if (add = true) {
+                System.out.println("STDOUT: Successfully added transaction to the array.");
+            }
+            else {
+                System.err.println("STDERR: Error in adding transaction to the array.");
+            }
 
         }
     }

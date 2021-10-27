@@ -9,7 +9,7 @@ public class main {
     public static void main(String[] args) {
         System.out.println("Anyone for an XIRR Calculation?");
 
-        ArrayList transactions = new ArrayList();
+        var transactions = new ArrayList();
 
         transactions.addAll(
                 Arrays.asList(
