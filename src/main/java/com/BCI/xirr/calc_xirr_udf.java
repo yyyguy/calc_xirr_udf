@@ -37,21 +37,20 @@ public class calc_xirr_udf implements AggrFunction {
     public void setup() {
 
         System.out.println("STDOUT: Calling setup() in calc_xirr_udf ");
-        System.err.println("STDERR: Calling setup() in calc_xirr_udf ");
 
         // Initialize the working variables
-        nonNullCount = new BigIntHolder();
-        nonNullCount.value = 0;
-        when = new NullableVarCharHolder();
-        amount = new NullableFloat8Holder();
-        init = new NullableIntHolder();
-        init.value = 0;
+        // nonNullCount = new BigIntHolder();
+        // nonNullCount.value = 0;
+        // when = new NullableVarCharHolder();
+        // amount = new NullableFloat8Holder();
+        // init = new NullableIntHolder();
+        // init.value = 0;
 
-        txs = new ArrayList();
+        // txs = new ArrayList();
 
-        xirr = new XIRR.Builder();
-        rate = new Float8Holder();
-        rate.value = 0;
+        // xirr = new XIRR.Builder();
+        // rate = new Float8Holder();
+        // rate.value = 0;
     }
 
     // The add() function applies consistent logic against each record within the dataset.
@@ -61,19 +60,19 @@ public class calc_xirr_udf implements AggrFunction {
         System.out.println("STDOUT: Calling add() in CalcXIRR");
 
         // Check to see if the record's amount is available
-        if (amount.isSet != 0) {
-            nonNullCount.value = 1;
+        // if (amount.isSet != 0) {
+        //     nonNullCount.value = 1;
 
-            // Add the record's amount and date to the transactions array
-            boolean add = txs.add(new Transaction(amount.value, when.buffer.toString()));
-            if (add = true) {
-                System.out.println("STDOUT: Successfully added transaction to the array.");
-            }
-            else {
-                System.err.println("STDERR: Error in adding transaction to the array.");
-            }
+        //     // Add the record's amount and date to the transactions array
+        //     boolean add = txs.add(new Transaction(amount.value, when.buffer.toString()));
+        //     if (add = true) {
+        //         System.out.println("STDOUT: Successfully added transaction to the array.");
+        //     }
+        //     else {
+        //         System.err.println("STDERR: Error in adding transaction to the array.");
+        //     }
 
-        }
+        // }
     }
 
     // The output() function produces the return result which in this case is the internal rate of return.
@@ -82,9 +81,9 @@ public class calc_xirr_udf implements AggrFunction {
 
         System.out.println("STDOUT: Calling output() in CalcXIRR");
 
-        // Call the XIRR calculation function with the loaded transactions array as the input argument
-        rate.value = new XIRR(unmodifiableList(txs)).xirr();
-        System.out.println(rate.value);
+        // // Call the XIRR calculation function with the loaded transactions array as the input argument
+        // rate.value = new XIRR(unmodifiableList(txs)).xirr();
+        // System.out.println(rate.value);
     }
 
     // The reset() function applies the necessary reset values to the required variables.
@@ -93,7 +92,7 @@ public class calc_xirr_udf implements AggrFunction {
 
         System.out.println("STDOUT: Calling reset() in calc_xirr_udf ");
 
-        nonNullCount.value = 0; // Reset the null check
-        rate.value         = 0; // Reset the rate.value
+        // nonNullCount.value = 0; // Reset the null check
+        // rate.value         = 0; // Reset the rate.value
     }
 }
