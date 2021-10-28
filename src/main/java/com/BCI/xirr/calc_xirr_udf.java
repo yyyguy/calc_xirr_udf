@@ -98,6 +98,6 @@ public class calc_xirr_udf implements AggrFunction {
         System.out.println("STDOUT: Calling reset() in calc_xirr_udf ");
 
         nonNullCount.value = 0; // Reset the null check
-        out_rate.value         = 0; // Reset the rate.value
+        out_rate.value     = 0; // Reset the rate.value
     }
 }
