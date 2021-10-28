@@ -87,7 +87,7 @@ public class calc_xirr_udf implements AggrFunction {
         System.out.println("STDOUT: Calling output() in CalcXIRR");
 
         // // Call the XIRR calculation function with the loaded transactions array as the input argument
-        out_rate.value = new XIRR(unmodifiableList(txs)).xirr();
+        out_rate.value = new XIRR(txs).xirr();
         System.out.println(out_rate.value);
     }
 
