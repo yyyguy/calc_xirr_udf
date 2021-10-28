@@ -1,18 +1,14 @@
 package com.BCI.xirr;
 
+// Import dependencies
 import static java.util.Collections.unmodifiableList;
-
 import java.util.ArrayList;
 
-import javax.inject.Inject;
-
-// Import dependencies
 import com.dremio.exec.expr.AggrFunction;
 import com.dremio.exec.expr.annotations.FunctionTemplate;
 import com.dremio.exec.expr.annotations.Output;
 import com.dremio.exec.expr.annotations.Param;
 import com.dremio.exec.expr.annotations.Workspace;
-import com.dremio.exec.expr.fn.FunctionErrorContext;
 
 import org.apache.arrow.vector.holders.BigIntHolder;
 import org.apache.arrow.vector.holders.NullableFloat8Holder;
@@ -37,7 +33,6 @@ public class calc_xirr_udf implements AggrFunction {
     @Workspace ArrayList txs;
     @Workspace NullableIntHolder init;
     @Workspace BigIntHolder nonNullCount;
-    @Inject FunctionErrorContext errCtx;
 
     // The setup() function is used to initialize the workspace variables.
     public void setup() {
