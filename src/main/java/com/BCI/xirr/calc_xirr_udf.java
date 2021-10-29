@@ -11,11 +11,9 @@ import org.apache.arrow.vector.holders.NullableFloat8Holder;
 import org.apache.arrow.vector.holders.NullableIntHolder;
 import org.apache.arrow.vector.holders.NullableVarCharHolder;
 import org.apache.arrow.vector.holders.VarCharHolder;
-import org.apache.arrow.vector.holders.ValueHolder;
 
 import org.apache.arrow.memory.ArrowBuf;
 import javax.inject.Inject;
-import java.io.*;
 
 // Function Template configuration
 @SuppressWarnings("rawtypes")
@@ -27,15 +25,18 @@ import java.io.*;
 // there are multiple records combined to perform the XIRR calculation
 public class calc_xirr_udf implements AggrFunction {
 
-    @Param NullableVarCharHolder whenInHolder;
-    @Param NullableVarCharHolder  amountInHolder;
-    @Param NullableVarCharHolder separatorInHolder;
-    @Output NullableFloat8Holder rateOutHolder;
-    @Workspace NullableIntHolder init;
-    @Workspace NullableIntHolder nonNullCount;
-    @Workspace VarCharHolder arrWhen;
-    @Workspace VarCharHolder arrAmount;
+    @Param NullableVarCharHolder     whenInHolder;
+    @Param NullableVarCharHolder     amountInHolder;
+    @Param NullableVarCharHolder     separatorInHolder;
+
+    @Output NullableFloat8Holder     rateOutHolder;
+
+    @Workspace NullableIntHolder     init;
+    @Workspace NullableIntHolder     nonNullCount;
+    @Workspace VarCharHolder         arrWhen;
+    @Workspace VarCharHolder         arrAmount;
     @Workspace NullableVarCharHolder amountConvHolder;
+
     @Inject ArrowBuf whenBuffer;
     @Inject ArrowBuf amountBuffer;
 
@@ -62,6 +63,8 @@ public class calc_xirr_udf implements AggrFunction {
     @Override
     public void add() {
             System.out.println("STDOUT: Calling add() in CalcXIRR");
+
+            // txs.add(new Transaction(amount, when));
 
             // Determine the number of bytes for each input parameter
             final int bytesWhen      = whenInHolder.end - whenInHolder.start;
@@ -92,7 +95,7 @@ public class calc_xirr_udf implements AggrFunction {
         System.out.println("STDOUT: Calling output() in CalcXIRR");
 
         // Call the XIRR calculation function with the loaded transactions array as the input argument
-        rateOutHolder.value = new com.BCI.xirr.calcXIRR(arrAmount.buffer.toString(), arrWhen.buffer.toString() separatorInHolder.buffer.toString()), ;
+        // rateOutHolder.value = new com.BCI.xirr.calcXIRR(arrAmount.buffer.toString(), arrWhen.buffer.toString() separatorInHolder.buffer.toString());
     }
 
     // The reset() function applies the necessary reset values to the required variables.

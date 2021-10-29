@@ -10,6 +10,14 @@ public class main {
         ArrayList<Transaction> transactions = new ArrayList();
         ArrayList<Transaction> txs = new ArrayList();
 
+        //
+        // SELECT company, calc_xirr_udf(amount, date) FROM dataset
+        // GROUP BY company
+        // 
+        
+        // '1', '2', '3', '4', '5', '6'
+        // "2015-01-15", "2016-01-13",
+
         txs.add(new Transaction(-1000, "2015-01-15"));
         txs.add(new Transaction(-2500, "2015-02-08"));
         txs.add(new Transaction(-1000, "2015-04-17"));
