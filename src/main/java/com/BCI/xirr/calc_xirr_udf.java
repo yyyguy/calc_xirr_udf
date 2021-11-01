@@ -28,7 +28,6 @@ public class calc_xirr_udf implements AggrFunction {
     @Param NullableVarCharHolder     whenInHolder;
     @Param NullableVarCharHolder     amountInHolder;
     @Param NullableVarCharHolder     separatorInHolder;
-
     @Output NullableFloat8Holder     rateOutHolder;
 
     @Workspace NullableIntHolder     init;
@@ -42,21 +41,14 @@ public class calc_xirr_udf implements AggrFunction {
 
     // The setup() function is used to initialize the workspace variables.
     public void setup() {
-
         System.out.println("STDOUT: Calling setup() in calc_xirr_udf ");
         new com.BCI.xirr.calcXIRR();
 
         // Initialize the working variables
         nonNullCount = new NullableIntHolder();
         nonNullCount.value = 0;
-        whenInHolder = new NullableVarCharHolder();
-        amountInHolder = new NullableVarCharHolder();
-        separatorInHolder = new NullableVarCharHolder();
-
         init = new NullableIntHolder();
         init.value = 0;
-        rateOutHolder = new NullableFloat8Holder();
-        rateOutHolder.value = 0;
     }
 
     // The add() function applies consistent logic against each record within the dataset.
@@ -83,9 +75,7 @@ public class calc_xirr_udf implements AggrFunction {
 
                 arrAmount.buffer.getBytes(arrAmount.start, amountBuffer, 0, bytesAmount + bytesSeparator);
                 arrWhen.buffer.getBytes(arrWhen.start, whenBuffer, 0, bytesWhen + bytesSeparator); 
-
             }
-
     }
 
     // The output() function produces the return result which in this case is the internal rate of return.
@@ -95,7 +85,7 @@ public class calc_xirr_udf implements AggrFunction {
         System.out.println("STDOUT: Calling output() in CalcXIRR");
 
         // Call the XIRR calculation function with the loaded transactions array as the input argument
-        // rateOutHolder.value = new com.BCI.xirr.calcXIRR(arrAmount.buffer.toString(), arrWhen.buffer.toString() separatorInHolder.buffer.toString());
+        rateOutHolder.value = 
     }
 
     // The reset() function applies the necessary reset values to the required variables.
@@ -105,6 +95,6 @@ public class calc_xirr_udf implements AggrFunction {
         System.out.println("STDOUT: Calling reset() in calc_xirr_udf ");
 
         nonNullCount.value = 0; // Reset the null check
-        rateOutHolder.value     = 0; // Reset the rate.value
+        // rateOutHolder.value     = 0; // Reset the rate.value
     }
 }
