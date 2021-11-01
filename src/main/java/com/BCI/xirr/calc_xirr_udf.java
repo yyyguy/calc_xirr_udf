@@ -7,7 +7,7 @@ import com.dremio.exec.expr.annotations.Output;
 import com.dremio.exec.expr.annotations.Param;
 import com.dremio.exec.expr.annotations.Workspace;
 
-import org.apache.arrow.vector.holders.NullableFloat8Holder;
+import org.apache.arrow.vector.holders.Float8Holder;
 import org.apache.arrow.vector.holders.NullableIntHolder;
 import org.apache.arrow.vector.holders.NullableVarCharHolder;
 import org.apache.arrow.vector.holders.VarCharHolder;
@@ -25,10 +25,10 @@ import javax.inject.Inject;
 // there are multiple records combined to perform the XIRR calculation
 public class calc_xirr_udf implements AggrFunction {
 
-    @Param NullableVarCharHolder     whenInHolder;
-    @Param NullableVarCharHolder     amountInHolder;
-    @Param NullableVarCharHolder     separatorInHolder;
-    @Output NullableFloat8Holder     rateOutHolder;
+    @Param NullableVarCharHolder whenInHolder;
+    @Param NullableVarCharHolder amountInHolder;
+    @Param NullableVarCharHolder separatorInHolder;
+    @Output Float8Holder         rateOutHolder;
 
     @Workspace NullableIntHolder     init;
     @Workspace NullableIntHolder     nonNullCount;
@@ -40,22 +40,14 @@ public class calc_xirr_udf implements AggrFunction {
     @Inject ArrowBuf amountBuffer;
 
     // The setup() function is used to initialize the workspace variables.
-    public void setup() {
-        System.out.println("STDOUT: Calling setup() in calc_xirr_udf ");
-        new com.BCI.xirr.calcXIRR();
-
-        // Initialize the working variables
-        nonNullCount = new NullableIntHolder();
-        nonNullCount.value = 0;
-        init = new NullableIntHolder();
-        init.value = 0;
-    }
+    public void setup() { }
 
     // The add() function applies consistent logic against each record within the dataset.
     @Override
     public void add() {
             System.out.println("STDOUT: Calling add() in CalcXIRR");
 
+            new com.BCI.xirr.Transaction(Double.parseDouble(amountInHolder.buffer.toString()), whenInHolder.buffer.toString());
             // txs.add(new Transaction(amount, when));
 
             // Determine the number of bytes for each input parameter
@@ -64,7 +56,7 @@ public class calc_xirr_udf implements AggrFunction {
             final int bytesSeparator = separatorInHolder.end - separatorInHolder.start;
 
             // Check to see if the record's amount is available
-            if (amountInHolder.isSet != 0) {
+            if (amountInHolder.isSet != 0 && whenInHolder.isSet != 0) {
                 nonNullCount.value = 1;
 
                 // Reallocate enough memory to add the input values into each respective buffer;
@@ -74,7 +66,7 @@ public class calc_xirr_udf implements AggrFunction {
                   arrWhen.buffer = whenBuffer      = whenBuffer.reallocIfNeeded(bytesSeparator);
 
                 arrAmount.buffer.getBytes(arrAmount.start, amountBuffer, 0, bytesAmount + bytesSeparator);
-                arrWhen.buffer.getBytes(arrWhen.start, whenBuffer, 0, bytesWhen + bytesSeparator); 
+                  arrWhen.buffer.getBytes(arrWhen.start, whenBuffer, 0, bytesWhen + bytesSeparator); 
             }
     }
 
@@ -85,7 +77,8 @@ public class calc_xirr_udf implements AggrFunction {
         System.out.println("STDOUT: Calling output() in CalcXIRR");
 
         // Call the XIRR calculation function with the loaded transactions array as the input argument
-        rateOutHolder.value = 
+        rateOutHolder.value = com.BCI.xirr.calc_xirr_fn.calc_xirr(arrAmount.buffer.toString(), arrWhen.buffer.toString());
+
     }
 
     // The reset() function applies the necessary reset values to the required variables.
