@@ -16,7 +16,7 @@ public class calc_xirr_fn {
         Double txnAmount;
         String txnWhen = new String();
 
-        for (int i = 0; i < stAmount.length; i++) {
+        for (int i = 0; i < stAmount.length; ++i) {
             
              txnAmount = Double.parseDouble(stAmount[i]);
              txnWhen = stWhen[i];
