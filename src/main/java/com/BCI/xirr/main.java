@@ -11,5 +11,7 @@ public class main {
         String rate = com.BCI.xirr.calc_xirr_fn.calc_xirr(arrAmount, arrWhen);
 
         System.out.println(rate);
+
+
     }
 }
