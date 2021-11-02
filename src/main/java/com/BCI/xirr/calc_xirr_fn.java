@@ -1,19 +1,18 @@
 package com.BCI.xirr;
 
 import java.util.ArrayList;
-import org.apache.arrow.vector.holders.Float8Holder;
 
 //import java.time.LocalDate;
+@SuppressWarnings("unchecked")
 
 public class calc_xirr_fn {
 
-    public final static double calc_xirr(String arrAmount, String arrWhen) {
+    public final static String calc_xirr(String arrAmount, String arrWhen) {
 
         ArrayList<Transaction> txs = new ArrayList();
 
         String [] stAmount = arrAmount.split(",",0);
         String [] stWhen   = arrWhen.split(",",0);
-        Float8Holder rate  = new Float8Holder();
         double txnAmount;
         String txnWhen;
 
@@ -42,8 +41,8 @@ public class calc_xirr_fn {
         txs.add(new Transaction(-1013.27, "2018-04-17"));
         txs.add(new Transaction(3050,     "2020-08-24"));
 
-        rate.value = new XIRR(txs).xirr();
-        return rate.value;
+        double rate = new XIRR(txs).xirr();
+        return Double.toString(rate);
     }
  
 }

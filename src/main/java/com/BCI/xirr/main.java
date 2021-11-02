@@ -9,8 +9,8 @@ public class main {
         String arrWhen = "2015-01-15,2015-02-08,2015-04-17,2015-08-24,2016-02-08";
         String arrAmount = "-4000,-2500,-1000,5050,-2200.15";
 
-        double rate = com.BCI.xirr.calc_xirr_fn.calc_xirr(arrAmount, arrWhen);
+        // double rate = com.BCI.xirr.calc_xirr_fn.calc_xirr(arrAmount, arrWhen);
 
-        System.out.println(rate);
+        // System.out.println(rate);
     }
 }
