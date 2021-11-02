@@ -23,7 +23,7 @@ public class calc_xirr_udf implements AggrFunction {
 
     @Param NullableVarCharHolder  whenInHolder;
     @Param NullableVarCharHolder  amountInHolder;
-    @Param NullableVarCharHolder  separatorInHolder;
+    //@Param NullableVarCharHolder  separatorInHolder;
     @Output NullableVarCharHolder rateOutHolderString;
 
     @Workspace NullableIntHolder     init;
@@ -52,18 +52,17 @@ public class calc_xirr_udf implements AggrFunction {
        int whenLength;
        final byte[] bytesAmount;
        int amountLength;
-       final byte[] bytesSeparator;
-       int separatorLength;
+       //final byte[] bytesSeparator;
+       //int separatorLength;
        String txnWhen;
        String txnAmount;
+       //String txnSeparator = ",";
 
-       if (whenInHolder.isSet != 0 && amountInHolder.isSet != 0) {
-            nonNullCount.value = 1;
 
-            if (init.value == 0) {
+//            txnSeparator = com.dremio.exec.expr.fn.impl.StringFunctionHelpers.toStringFromUTF8();
 
-                init.value = 1;
-                nonNullCount.value = 1;
+                // init.value = 1;
+                // nonNullCount.value = 1;
                 
                 txnWhen = com.dremio.exec.expr.fn.impl.StringFunctionHelpers.toStringFromUTF8(whenInHolder.start, whenInHolder.end, whenInHolder.buffer);
                 bytesWhen = txnWhen.getBytes();
@@ -80,28 +79,7 @@ public class calc_xirr_udf implements AggrFunction {
                 arrAmount.start = 0;
                 arrAmount.end = amountLength;
                 arrAmount.buffer.setBytes(0, bytesAmount, 0, amountLength);
-            }
-          else {
-                // Determine the number of bytes for each input parameter
-                txnWhen = com.dremio.exec.expr.fn.impl.StringFunctionHelpers.toStringFromUTF8(whenInHolder.start, whenInHolder.end, whenInHolder.buffer);
-                bytesWhen      = txnWhen.getBytes();
-                whenLength     = bytesWhen.length;
-                arrWhen.buffer = whenBuffer      = whenBuffer.reallocIfNeeded(whenLength);
-                arrWhen.buffer = whenBuffer      = whenBuffer.reallocIfNeeded(bytesSeparator.length);
 
-                txnAmount = com.dremio.exec.expr.fn.impl.StringFunctionHelpers.toStringFromUTF8(amountInHolder.start, amountInHolder.end, amountInHolder.buffer);
-                bytesAmount = txnAmount.getBytes();
-                amountLength = bytesAmount.length;
-                arrAmount.buffer = amountBuffer = amountBuffer.reallocIfNeeded((long)amountLength);
-                arrAmount.start = 0;
-                arrAmount.end = amountLength;
-                arrAmount.buffer.setBytes(0, bytesAmount, 0, amountLength);
-
-                //bytesSeparator = separatorInHolder.end - separatorInHolder.start;
-
-            }
- 
-       }
     }
 
     // The output() function produces the return result which in this case is the internal rate of return.
@@ -115,7 +93,9 @@ public class calc_xirr_udf implements AggrFunction {
 
         // Call the XIRR calculation function with the loaded transactions array as the input argument
         // rateOutHolder.value = com.dremio.example_udfs.calc_xirr_fn.calc_xirr("-1000,-2000,5050", "2015-01-12, 2016-02-14, 2017-04-16");
-	String tmp = com.BCI.xirr.calc_xirr_fn.calc_xirr("-1000,-2000,5050", "2015-01-12, 2016-02-14, 2017-04-16");
+        // String tmp = com.BCI.xirr.calc_xirr_fn.calc_xirr(arrAmount, arrWhen);
+
+        String tmp = com.BCI.xirr.calc_xirr_fn.calc_xirr("-1000,-2000,5050", "2015-01-12, 2016-02-14, 2017-04-16");
 	final byte[] b = tmp.getBytes();
 	int finallength = b.length;
 	rateOutHolderTemp.buffer = tempBuffer = tempBuffer.reallocIfNeeded((long)finallength);
