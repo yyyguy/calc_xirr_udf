@@ -47,39 +47,39 @@ public class calc_xirr_udf implements AggrFunction {
     // The add() function applies consistent logic against each record within the dataset.
     @Override
     public void add() {
-        System.out.println("STDOUT: Calling add() in CalcXIRR");
+       System.out.println("STDOUT: Calling add() in CalcXIRR");
 
-        if (whenInHolder.isSet != 0 && amountInHolder.isSet != 0) {
-            nonNullCount.value = 1;
-
-            if (init.value == 0) {
-
-                init.value = 1;
-                nonNullCount.value = 1;
-                byte[] arrWhen = new byte[whenInHolder.end - whenInHolder.start];
-                byte[] arrAmount = new byte[amountInHolder.end - amountInHolder.start];
-                whenInHolder.buffer.getBytes(whenInHolder.start, arrWhen, 0, whenInHolder.end - whenInHolder.start);
-                amountInHolder.buffer.getBytes(amountInHolder.start, arrAmount, 0, amountInHolder.end - amountInHolder.start);
-            }
-            else {
-                java.lang.String strWhen;
-                java.lang.String strAmount;
-            }
+//        if (whenInHolder.isSet != 0 && amountInHolder.isSet != 0) {
+//            nonNullCount.value = 1;
+//
+//            if (init.value == 0) {
+//
+//                init.value = 1;
+//                nonNullCount.value = 1;
+//                byte[] arrWhen = new byte[whenInHolder.end - whenInHolder.start];
+//                byte[] arrAmount = new byte[amountInHolder.end - amountInHolder.start];
+//                whenInHolder.buffer.getBytes(whenInHolder.start, arrWhen, 0, whenInHolder.end - whenInHolder.start);
+//                amountInHolder.buffer.getBytes(amountInHolder.start, arrAmount, 0, amountInHolder.end - amountInHolder.start);
+//            }
+//            else {
+//                java.lang.String strWhen;
+//                java.lang.String strAmount;
+//            }
  
             // Determine the number of bytes for each input parameter
-            final int bytesWhen      = whenInHolder.end - whenInHolder.start;
-            final int bytesAmount    = amountInHolder.end - amountInHolder.start;
-            final int bytesSeparator = separatorInHolder.end - separatorInHolder.start;
+//            final int bytesWhen      = whenInHolder.end - whenInHolder.start;
+//            final int bytesAmount    = amountInHolder.end - amountInHolder.start;
+//            final int bytesSeparator = separatorInHolder.end - separatorInHolder.start;
 
             // Reallocate enough memory to add the input values into each respective buffer;
-            arrAmount.buffer = amountBuffer    = amountBuffer.reallocIfNeeded(bytesAmount);
-            arrAmount.buffer = amountBuffer    = amountBuffer.reallocIfNeeded(bytesSeparator);
-              arrWhen.buffer = whenBuffer      = whenBuffer.reallocIfNeeded(bytesWhen);
-              arrWhen.buffer = whenBuffer      = whenBuffer.reallocIfNeeded(bytesSeparator);
+//            arrAmount.buffer = amountBuffer    = amountBuffer.reallocIfNeeded(bytesAmount);
+//            arrAmount.buffer = amountBuffer    = amountBuffer.reallocIfNeeded(bytesSeparator);
+//              arrWhen.buffer = whenBuffer      = whenBuffer.reallocIfNeeded(bytesWhen);
+//              arrWhen.buffer = whenBuffer      = whenBuffer.reallocIfNeeded(bytesSeparator);
 
-            arrAmount.buffer.getBytes(arrAmount.start, amountBuffer, 0, bytesAmount + bytesSeparator);
-              arrWhen.buffer.getBytes(arrWhen.start, whenBuffer, 0, bytesWhen + bytesSeparator); 
-        }
+//            arrAmount.buffer.getBytes(arrAmount.start, amountBuffer, 0, bytesAmount + bytesSeparator);
+//              arrWhen.buffer.getBytes(arrWhen.start, whenBuffer, 0, bytesWhen + bytesSeparator); 
+//        }
     }
 
     // The output() function produces the return result which in this case is the internal rate of return.
