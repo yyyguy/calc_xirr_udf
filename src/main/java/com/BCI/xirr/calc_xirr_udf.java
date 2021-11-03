@@ -131,7 +131,7 @@ public class calc_xirr_udf implements AggrFunction {
 
         String tmp = com.BCI.xirr.calc_xirr_fn.calc_xirr(amountValues.buffer.toString(), "2015-01-12,2016-02-14,2017-04-16");
 
-        com.dremio.exec.expr.fn.impl.ByteArrayWrapper tmp01 = (com.dremio.exec.expr.fn.impl.ByteArrayWrapper) amountValues.buffer;
+        //com.dremio.exec.expr.fn.impl.ByteArrayWrapper tmp01 = (com.dremio.exec.expr.fn.impl.ByteArrayWrapper) amountValues.buffer;
 
     }
 
