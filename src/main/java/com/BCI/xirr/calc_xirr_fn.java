@@ -22,20 +22,27 @@ public class calc_xirr_fn {
              txnAmount = Double.parseDouble(stAmount[i]);
              txnWhen = stWhen[i];
 
-             System.out.println("when:" + txnWhen + " amount:" + txnAmount);
+             //System.out.println("when:" + txnWhen + " amount:" + txnAmount);
              txs.add(new Transaction(txnAmount, txnWhen));
 
-             System.out.println(sbf1);
+             //System.out.println(sbf1);
      
-             sbf1.append(stWhen[i]);
-             sbf1.append(",");
+             //sbf1.append(stWhen[i]);
+             //sbf1.append(",");
      
-             System.out.println(sbf1);
+             //System.out.println(sbf1);
 
         }
 
         double rate = new XIRR(txs).xirr();
         return Double.toString(rate);
+    }
+
+    public final static String addArray(String element, String arrElement) {
+
+        arrElement = arrElement + "," + element;
+        return arrElement;
+
     }
  
 }
