@@ -25,7 +25,7 @@ public class calc_xirr_udf implements AggrFunction {
 
     @Param NullableVarCharHolder  whenInHolder;
     @Param NullableVarCharHolder  amountInHolder;
-    @Output NullableVarCharHolder rateOutHolderString;
+    @Output NullableVarCharHolder rateOutHolder;
 
     @Workspace NullableIntHolder     init;
     @Workspace BigIntHolder          nonNullCount;
@@ -36,7 +36,7 @@ public class calc_xirr_udf implements AggrFunction {
     @Inject ArrowBuf whenBuffer;
     @Inject ArrowBuf amountBuffer;
     @Inject ArrowBuf tempBuffer;
-    @Inject ArrowBuf outputBuf;
+    @Inject ArrowBuf rateBuffer;
 
     // The setup() function is used to initialize the workspace variables.
     public void setup() {
@@ -61,61 +61,36 @@ public class calc_xirr_udf implements AggrFunction {
         // Local variables
         String txnWhen = new String();
         String txnAmount = new String();
-        String testWhen;
+        String addWhen;
+        String addAmount;
        
-       if (amountInHolder.isSet != 0 && whenInHolder.isSet != 0) {
-           nonNullCount.value = 1;
+        // Access date text contained in the VarCharHolder called whenInHolder
+        txnWhen = com.dremio.exec.expr.fn.impl.StringFunctionHelpers.toStringFromUTF8(whenInHolder.start, whenInHolder.end, whenInHolder.buffer);
 
-           if (init.value == 0) {
-               init.value = 1;
+        // Append the current Amount value to the AmountValues
+        addWhen = com.BCI.xirr.calc_xirr_fn.addArray(txnWhen, whenValues.buffer.toString());
 
-               // Access date text contained in the VarCharHolder called whenInHolder
-               txnWhen = com.dremio.exec.expr.fn.impl.StringFunctionHelpers.toStringFromUTF8(whenInHolder.start, whenInHolder.end, whenInHolder.buffer);
+        // Assign the date text to the whenValues VarCharHolder
+        byte bytesWhen[] = addWhen.getBytes(java.nio.charset.Charset.forName("UTF-8"));
+        whenBuffer = whenBuffer.reallocIfNeeded(bytesWhen.length);
+        whenBuffer.setBytes(0, bytesWhen);
+        whenValues.buffer = whenBuffer;
+        whenValues.start = 0;
+        whenValues.end = bytesWhen.length;
 
-               // Assign the date text to the whenValues VarCharHolder
-               byte bytesWhen[] = txnWhen.getBytes(java.nio.charset.Charset.forName("UTF-8"));
-               whenBuffer = whenBuffer.reallocIfNeeded(bytesWhen.length);
-               whenBuffer.setBytes(0, bytesWhen);
-               whenValues.buffer = whenBuffer;
-               whenValues.start = 0;
-               whenValues.end = bytesWhen.length;
+        // Access amount text contained in the VarCharHolder called whenInHolder
+        txnAmount = com.dremio.exec.expr.fn.impl.StringFunctionHelpers.toStringFromUTF8(amountInHolder.start, amountInHolder.end, amountInHolder.buffer);
 
-               // Access amount text contained in the VarCharHolder called whenInHolder
-               txnAmount = com.dremio.exec.expr.fn.impl.StringFunctionHelpers.toStringFromUTF8(amountInHolder.start, amountInHolder.end, amountInHolder.buffer);
+        // Append the current Amount value to the AmountValues
+        addAmount = com.BCI.xirr.calc_xirr_fn.addArray(txnAmount, amountValues.buffer.toString());
 
-               // Assign the amount text to the amountValues VarCharHolder
-               byte bytesAmount[] = txnAmount.getBytes(java.nio.charset.Charset.forName("UTF-8"));
-               amountBuffer = amountBuffer.reallocIfNeeded(bytesWhen.length);
-               amountBuffer.setBytes(0, bytesAmount);
-               amountValues.buffer = amountBuffer;
-               amountValues.start = 0;
-               amountValues.end = bytesAmount.length;
-
-               testWhen = com.BCI.xirr.calc_xirr_fn.addArray(txnWhen, whenValues.buffer.toString());
-
-           } else {
-
-               // Access date text contained in the VarCharHolder called whenInHolder
-               txnWhen = com.dremio.exec.expr.fn.impl.StringFunctionHelpers.toStringFromUTF8(whenInHolder.start, whenInHolder.end, whenInHolder.buffer);
-
-               // Assign the date text to the whenValues VarCharHolder
-               byte bytesWhen[] = txnWhen.getBytes(java.nio.charset.Charset.forName("UTF-8"));
-               whenBuffer = whenBuffer.reallocIfNeeded(bytesWhen.length);
-               whenBuffer.setBytes(0, bytesWhen);
-               whenValues.buffer = whenBuffer;
-               whenValues.start = 0;
-               whenValues.end = bytesWhen.length;
-            
-               byte bytesAmounts[] = amountValues.buffer.toString().getBytes(java.nio.charset.Charset.forName("UTF-8"));
-               amountBuffer = amountBuffer.reallocIfNeeded(bytesAmounts.length);
-               amountBuffer.setBytes(0, bytesAmounts);
-               amountValues.buffer = amountBuffer;
-               amountValues.start = 0;
-               amountValues.end = bytesAmounts.length;
-
-           }
-
-       }
+        // Assign the amount text to the amountValues VarCharHolder
+        byte bytesAmount[] = addAmount.getBytes(java.nio.charset.Charset.forName("UTF-8"));
+        amountBuffer = amountBuffer.reallocIfNeeded(bytesAmount.length);
+        amountBuffer.setBytes(0, bytesAmount);
+        amountValues.buffer = amountBuffer;
+        amountValues.start = 0;
+        amountValues.end = bytesAmount.length;
 
     }
 
@@ -129,9 +104,14 @@ public class calc_xirr_udf implements AggrFunction {
         // rateOutHolder.value = com.dremio.example_udfs.calc_xirr_fn.calc_xirr("-1000,-2000,5050", "2015-01-12, 2016-02-14, 2017-04-16");
         // String tmp = com.BCI.xirr.calc_xirr_fn.calc_xirr(amountValues, whenValues);
 
-        String tmp = com.BCI.xirr.calc_xirr_fn.calc_xirr(amountValues.buffer.toString(), "2015-01-12,2016-02-14,2017-04-16");
-
-        //com.dremio.exec.expr.fn.impl.ByteArrayWrapper tmp01 = (com.dremio.exec.expr.fn.impl.ByteArrayWrapper) amountValues.buffer;
+        String rate = com.BCI.xirr.calc_xirr_fn.calc_xirr(amountValues.buffer.toString(), whenValues.buffer.toString());
+        
+        byte bytesRate[] = rate.getBytes(java.nio.charset.Charset.forName("UTF-8"));
+        rateBuffer = rateBuffer.reallocIfNeeded(bytesRate.length);
+        rateBuffer.setBytes(0, bytesRate);
+        rateOutHolder.buffer = rateBuffer;
+        rateOutHolder.start = 0;
+        rateOutHolder.end = bytesRate.length;
 
     }
 
